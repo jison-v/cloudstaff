@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 
-export class CommunicationDesignPage extends BasePage {
+export class DesignPage extends BasePage {
   // Button locators
   readonly gridButton = this.page.locator('button:has-text("GRID")');
   readonly textButton = this.page.locator('button:has-text("TEXT")');
@@ -48,10 +48,15 @@ readonly gridTileTextInput = this.page.locator('input[placeholder="Title"]');
 readonly gridAddImageMediaLibraryButton = this.page.locator('button[class*="ao-media-upload__button-with-icon"]');
 readonly searchFromLibraryInput = this.page.locator('input[placeholder="Search"]');
 readonly searchFromLibraryResult = this.page.locator('ao-media-card[class*="ng-star-inserted"]');
-readonly gridSaveButton = this.page.locator('button[type="submit"]');
+readonly SaveButton = this.page.locator('button[type="submit"]');
 
-async clickSaveButton() {
-    await this.gridSaveButton.click();
+    async validateConfirmationPopup() {
+    const confirmationPopup = this.page.locator('text=Your message has been saved');
+    await expect(confirmationPopup).toBeVisible();
+  }
+
+  async clickSaveButton() {
+    await this.SaveButton.click();
   }
 
   async clickGridButton() {

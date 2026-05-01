@@ -6,9 +6,13 @@ export class PublishPage extends BasePage {
   readonly accessCardTitle = this.page.locator('p.ao-card-header__title:has-text("Access")');
   readonly accessCardSubtitle = this.page.locator('p.ao-card-header__subtitle:has-text("Manage who can access this content")');
 
+  // Header tabs
+  readonly publishTab = this.page.locator('a.ao-admin-header__tab--active:has-text("Publish")');
+
   // Contact search and select
   readonly addContactsLabel = this.page.locator('p.contact-search-and-select__add:has-text("Add contacts")');
   readonly searchInput = this.page.locator('input.ao-search-input__input');
+  readonly searchResultItem = this.page.locator('span.ao-select-dropdown-item__content');
   readonly browseGroupsContactsButton = this.page.locator('button.ao-recipient__browse-recipients:has-text("Browse groups / contacts")');
 
   // Advanced access section
@@ -31,6 +35,14 @@ export class PublishPage extends BasePage {
   readonly categoriesCardTitle = this.page.locator('p.ao-card-header__title:has-text("Categories")');
   readonly categoriesCardSubtitle = this.page.locator('p.ao-card-header__subtitle:has-text("Assign categories to control which feeds show your content")');
   readonly addCategoryButton = this.page.locator('button[aria-label="Add category"]');
+  readonly searchCategoriesInput = this.page.locator('input.ao-search-input__input[placeholder="Search categories..."]');
+
+  // Categories dropdown
+  readonly categoriesDropdownCard = this.page.locator('div.ao-select-dropdown__card');
+  readonly categoriesDropdownSearchWrapper = this.page.locator('div.ao-select-dropdown__search-wrapper');
+  readonly categoriesDropdownSearchIcon = this.page.locator('ao-icon[name="search"]');
+  readonly categoriesDropdownContent = this.page.locator('div.ao-select-dropdown__content');
+  readonly categoryDropdownItem = this.page.locator('ao-select-dropdown-item');
 
   // Content preview card
   readonly contentPreviewCardTitle = this.page.locator('p.ao-card-header__title:has-text("Content preview")');
@@ -72,6 +84,9 @@ export class PublishPage extends BasePage {
   readonly restrictNotificationTimeCheckbox = this.page.locator('input[formcontrolname="restrictNotificationTime"]');
   readonly scheduleForLaterCheckbox = this.page.locator('input[formcontrolname="scheduleForLater"]');
 
+  // Action buttons
+  readonly publishAndNotifyButton = this.page.locator('button[ao-actimo-button]:has-text("Publish and notify")');
+
   // Card header interactions
   async expectAccessCardTitleVisible() {
     await expect(this.accessCardTitle).toBeVisible();
@@ -84,6 +99,10 @@ export class PublishPage extends BasePage {
   // Contact search interactions
   async fillSearchInput(text: string) {
     await this.searchInput.fill(text);
+  }
+
+  async clickSearchResultItem() {
+    await this.searchResultItem.first().click();
   }
 
   async clickBrowseGroupsContactsButton() {
@@ -181,6 +200,11 @@ export class PublishPage extends BasePage {
     await this.addCategoryButton.click();
   }
 
+  async searchAndSelectCategory(text: string) {
+    await this.searchCategoriesInput.fill(text);
+    await this.categoryDropdownItem.first().click();
+  }
+
   async expectAddCategoryButtonVisible() {
     await expect(this.addCategoryButton).toBeVisible();
   }
@@ -252,7 +276,9 @@ export class PublishPage extends BasePage {
   }
 
   async checkViaEmail() {
-    await this.viaEmailCheckbox.check();
+    if(!(await this.isViaEmailChecked())) {
+      await this.viaEmailCheckbox.check();
+    }
   }
 
   async uncheckViaEmail() {
@@ -361,5 +387,18 @@ export class PublishPage extends BasePage {
 
   async expectScheduleForLaterCheckboxVisible() {
     await expect(this.scheduleForLaterCheckbox).toBeVisible();
+  }
+
+  // Action button interactions
+  async clickPublishAndNotifyButton() {
+    await this.publishAndNotifyButton.click();
+  }
+
+  async expectPublishAndNotifyButtonVisible() {
+    await expect(this.publishAndNotifyButton).toBeVisible();
+  }
+
+  async isPublishAndNotifyButtonEnabled() {
+    return await this.publishAndNotifyButton.isEnabled();
   }
 }
