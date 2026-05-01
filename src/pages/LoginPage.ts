@@ -1,10 +1,11 @@
 import { expect, type Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 
-export class ExampleHomePage extends BasePage {
-  readonly usernameInput = this.page.locator('input[name="username"]');
+export class LoginPage extends BasePage {
+  readonly usernameInput = this.page.locator('input[name="email"]');
   readonly passwordInput = this.page.locator('input[name="password"]');
-  readonly signInButton = this.page.locator('button:has-text("Sign In")');
+  readonly signInButton = this.page.locator('button:has-text("Sign in")');
+  readonly acceptCookiesButton = this.page.locator('button:has-text("Accept All Cookies")').first();
 
 
   async goto() {
@@ -19,5 +20,16 @@ export class ExampleHomePage extends BasePage {
 
   async expectSignInButtonVisible() {
     await expect(this.signInButton).toBeVisible();
+  }
+
+  async closeCookiesPopup() {
+    const isCookiesButtonVisible = await this.acceptCookiesButton.isVisible().catch(() => false);
+    if (isCookiesButtonVisible) {
+      await this.acceptCookiesButton.click();
+    }
+  }
+
+  async expectCookiesPopupVisible() {
+    await expect(this.acceptCookiesButton).toBeVisible();
   }
 }
